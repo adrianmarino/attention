@@ -1,0 +1,71 @@
+#!/bin/python
+# -*- coding: utf-8 -*-
+# -----------------------------------------------------------------------------
+# Imports
+# -----------------------------------------------------------------------------
+import logging
+import sys
+
+sys.path.append('./src')
+
+from logger import initialize_logger
+import click
+from torchtext.legacy.datasets import Multi30k
+
+from data import ExampleUtil
+from field_factory import FieldFactory
+
+
+# -----------------------------------------------------------------------------
+#
+#
+#
+#
+#
+# -----------------------------------------------------------------------------
+# Functions
+# -----------------------------------------------------------------------------
+def save(data, destiny_path, filename):
+    path = f'{destiny_path}/{filename}.json'
+    ExampleUtil.save(data, path)
+    logging.info(f'{filename} set saved on {path}!')
+
+
+def download_dataset(origin_language, target_language):
+    source_field = FieldFactory.create_from_news_model(origin_language)
+    target_field = FieldFactory.create_from_web_model(target_language)
+
+    train_data, valid_data, test_data = Multi30k.splits(
+        exts=(f'.{origin_language}', f'.{target_language}'),
+        fields=(source_field, target_field)
+    )
+    logging.info("Dataset downloaded!")
+    return test_data, train_data, valid_data
+
+
+# -----------------------------------------------------------------------------
+#
+#
+#
+#
+#
+# -----------------------------------------------------------------------------
+# Main
+# -----------------------------------------------------------------------------
+@click.command()
+@click.option('--destiny-path', default='./dataset', help='Dataset destiny path')
+@click.option('--origin-language', default='de', help='Origin language')
+@click.option('--target-language', default='en', help='Target language')
+def main(destiny_path, origin_language, target_language):
+    initialize_logger()
+
+    test_data, train_data, valid_data = download_dataset(origin_language, target_language)
+
+    save(train_data, destiny_path, 'train')
+    save(valid_data, destiny_path, 'valid')
+    save(test_data, destiny_path, 'test')
+
+
+if __name__ == '__main__':
+    main()
+# -----------------------------------------------------------------------------
