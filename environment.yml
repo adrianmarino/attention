@@ -1,0 +1,11 @@
+name: attention
+channels:
+  - pytorch
+  - nvidia
+  - defaults
+dependencies:
+  - numpy
+  - pip
+  - pytorch
+  - pip:
+    - click
