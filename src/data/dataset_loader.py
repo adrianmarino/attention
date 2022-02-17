@@ -1,6 +1,6 @@
 from torchtext.legacy.data import Example, Dataset
 
-from data import ExampleUtil
+from data.example_util import ExampleUtil
 
 
 class DatasetLoader:

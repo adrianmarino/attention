@@ -1,11 +1,16 @@
 import torch
 import torch.nn.functional as F
+from pytorch_common.error import Assertions
 from torch import nn
 
 
 class Attention(nn.Module):
     def __init__(self, encoder_hidden_dim, decoder_hidden_dim):
         super().__init__()
+
+        Assertions.positive_int(404103, encoder_hidden_dim, 'Encoder hidden state dimension')
+        Assertions.positive_int(404104, decoder_hidden_dim, 'Decoder hidden state dimension')
+
         self.__energy_dense = nn.Linear(encoder_hidden_dim * 2 + decoder_hidden_dim, decoder_hidden_dim)
         self.__energy_activation = nn.Tanh()
         self.__v = nn.Linear(decoder_hidden_dim, 1, bias=False)
@@ -20,18 +25,14 @@ class Attention(nn.Module):
         Return:
              [batch size, src phrase len, decoder hidden state dim + encoder hidden state dim * 2]
         """
-        src_phrase_len = encoder_outputs.size()[0]
-        batch_size = encoder_outputs.size()[1]
+        src_phrase_len, batch_size = encoder_outputs.size()[:2]
 
         # Repeat prev_dec_hidden by src word
         hidden = torch.cat([prev_dec_hidden] * src_phrase_len, dim=0)
         hidden = hidden.view(src_phrase_len, batch_size, -1)
-        # hidden = [batch size, src phrase len, previous decoder hidden state dim]
+        # hidden = [src phrase len, batch size, previous decoder hidden state dim]
 
-        enc_outputs = encoder_outputs.permute(1, 0, 2)
-        # enc_outputs = [batch size, src phrase len, encoder hidden state dim * 2]
-
-        return torch.cat((enc_outputs, hidden), dim=-1)  # -1 == last dim.
+        return torch.cat((hidden, encoder_outputs), dim=-1).permute(1, 0, 2)  # -1 == last dim.
 
     def __energy(self, prev_dec_hidden, encoder_outputs):
         """
@@ -68,5 +69,8 @@ class Attention(nn.Module):
             - encoder_outputs = [src_phrase_len, batch size, encoder hidden state dim * 2 (forward + backward)]
         Return: [batch size, src phrase len]
         """
+        Assertions.is_tensor(404301, prev_dec_hidden, 'Previous decoder hidden state')
+        Assertions.is_tensor(404302, encoder_outputs, 'Encoder outputs')
+
         energy = self.__energy(prev_dec_hidden, encoder_outputs)
-        return self._attention(energy)
+        return self.__attention(energy)

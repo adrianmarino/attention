@@ -1,18 +1,17 @@
 import torch
+from pytorch_common.error import Assertions
 from torch import nn
-
-from error.checker import Checker
 
 
 class Encoder(nn.Module):
     def __init__(self, vocab_dim, embedding_dim, dropout, enc_hidden_state_dim, dec_hidden_state_dim):
         super().__init__()
 
-        Checker.positive_int(404100, vocab_dim, 'Encoder vocabulary dimension')
-        Checker.positive_int(404101, embedding_dim, 'Encoder embedding dimension')
-        Checker.positive_float(404102, dropout, 'Encoder dropout probability')
-        Checker.positive_int(404103, enc_hidden_state_dim, 'Encoder hidden state dimension')
-        Checker.positive_int(404104, dec_hidden_state_dim, 'Decoder hidden state dimension')
+        Assertions.positive_int(404100, vocab_dim, 'Encoder vocabulary dimension')
+        Assertions.positive_int(404101, embedding_dim, 'Encoder embedding dimension')
+        Assertions.positive_float(404102, dropout, 'Encoder dropout probability')
+        Assertions.positive_int(404103, enc_hidden_state_dim, 'Encoder hidden state dimension')
+        Assertions.positive_int(404104, dec_hidden_state_dim, 'Decoder hidden state dimension')
 
         self.__embedding = nn.Embedding(vocab_dim, embedding_dim)
         self.__dropout = nn.Dropout(dropout)
@@ -30,8 +29,12 @@ class Encoder(nn.Module):
     def forward(self, phases_batch):
         """
         Args:
-         - phases_batch: [max_words_len, batch_size]
+            - phases_batch: [max_words_len, batch_size]
+        Returns:
+            - outputs = [max_words_len, batch_size, dec_hidden_state_dim]
+            - dec_hidden_state = [batch_size, dec_hidden_state_dim]
         """
+        Assertions.is_tensor(404105, phases_batch, 'Encoder input')
 
         # Step 1:
         #
