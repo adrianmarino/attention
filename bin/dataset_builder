@@ -53,9 +53,9 @@ def download_dataset(origin_language, target_language):
 # Main
 # -----------------------------------------------------------------------------
 @click.command()
-@click.option('--destiny-path', default='./dataset', help='Dataset destiny path')
-@click.option('--origin-language', default='de', help='Origin language')
-@click.option('--target-language', default='en', help='Target language')
+@click.option('--destiny-path', default='./dataset', help='Dataset destiny path (Default: ./dataset)')
+@click.option('--origin-language', default='de', help='Origin language (Default: de)')
+@click.option('--target-language', default='en', help='Target language (Default: en)')
 def main(destiny_path, origin_language, target_language):
     initialize_logger()
 

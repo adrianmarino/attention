@@ -38,25 +38,45 @@ $ python -m spacy download en_core_web_sm
 $ python -m spacy download de_core_news_sm
 ```
 
-## Training
+**Step 4**: Build dataset.
 
 ```bash
-$ python bin/train.py
+$ python bin/dataset_builder --help                                                                                                                                                                     ✔  attention   08:21:18  
 ```
 
 **Helper:**
 
 ```bash
-$ python bin/train.py --help
-Usage: train.py [OPTIONS]
+$ python bin/dataset_builder --help                                                                                                                                                                     ✔  attention   08:21:18  
+Usage: dataset_builder [OPTIONS]
 
 Options:
-  --dataset-path TEXT        Dataset path
-  --batch-size INTEGER       Batch size
-  --origin-language TEXT     Origin language
-  --target-language TEXT     Target language
-  --origin-min-freq INTEGER  Origin language word min frequency
-  --target-min-freq INTEGER  Target language word min frequency
+  --destiny-path TEXT     Dataset destiny path (Default: ./dataset)
+  --origin-language TEXT  Origin language (Default: de)
+  --target-language TEXT  Target language (Default: en)
+  --help                  Show this message and exit.
+```
+
+
+## Training
+
+```bash
+$ python bin/train
+```
+
+**Helper:**
+
+```bash
+$ python bin/train --help
+Usage: train [OPTIONS]
+
+Options:
+  --dataset-path TEXT        Dataset path (Default: ./dataset)
+  --batch-size INTEGER       Batch size (Default: 128)
+  --origin-language TEXT     Origin language (Default: de
+  --target-language TEXT     Target language (Default: en)
+  --origin-min-freq INTEGER  Origin language word min frequency (Default: 2)
+  --target-min-freq INTEGER  Target language word min frequency (Default: 2)
   --device TEXT              Device used to train and optimize model. Values:
                              gpu(Default) or cpu(Fallback).
   --help                     Show this message and exit.
@@ -65,23 +85,23 @@ Options:
 ## Evaluation
 
 ```bash
-$ python bin/eval.py \
+$ python bin/eval \
     --weights=path ./weights/2022-02-16_23-13-14--model--epoch_2--val_loss_3.5578497585497404.pt
 ```
 
 **Helper:**
 
 ```bash
-$ python bin/eval.py --help
-Usage: eval.py [OPTIONS]
+$ python bin/eval --help
+Usage: eval [OPTIONS]
 
 Options:
-  --dataset-path TEXT        Dataset path
-  --batch-size INTEGER       Batch size
-  --origin-language TEXT     Origin language
-  --target-language TEXT     Target language
-  --origin-min-freq INTEGER  Origin language word min frequency
-  --target-min-freq INTEGER  Target language word min frequency
+  --dataset-path TEXT        Dataset path (Default: ./dataset)
+  --batch-size INTEGER       Batch size (Default: 128)
+  --origin-language TEXT     Origin language (Default: de
+  --target-language TEXT     Target language (Default: en)
+  --origin-min-freq INTEGER  Origin language word min frequency (Default: 2)
+  --target-min-freq INTEGER  Target language word min frequency (Default: 2)
   --weights-path TEXT        weights path
   --device TEXT              Device used to train and optimize model. Values:
                              gpu(Default) or cpu(Fallback).
