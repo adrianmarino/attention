@@ -5,6 +5,8 @@
 # -----------------------------------------------------------------------------
 import sys
 
+import torch
+
 sys.path.append('./src')
 
 from pytorch_common.callbacks import SaveBestModel, EarlyStop
@@ -43,6 +45,7 @@ from field_factory import FieldFactory
 @click.option('--target-language', default='en', help='Target language')
 @click.option('--origin-min-freq', default=2, help='Origin language word min frequency')
 @click.option('--target-min-freq', default=2, help='Target language word min frequency')
+@click.option('--weights-path', help='weights path')
 @click.option(
     '--device',
     default='gpu',
@@ -55,6 +58,7 @@ def main(
         target_language,
         origin_min_freq,
         target_min_freq,
+        weights_path,
         device
 ):
     initialize_logger()
@@ -66,10 +70,10 @@ def main(
     loader = DatasetLoader(source_field, target_field)
 
     train_data = loader.load(f'{dataset_path}/train.json')
-    valid_data = loader.load(f'{dataset_path}/valid.json')
+    test_data = loader.load(f'{dataset_path}/test.json')
 
-    train_iterator, valid_iterator = BucketIterator.splits(
-        (train_data, valid_data),
+    test_iterator = BucketIterator.splits(
+        test_data,
         batch_size=batch_size,
         sort=False,
         device=get_device()
@@ -91,9 +95,9 @@ def main(
         dec_dropout=dropout,
         enc_hidden_state_dim=hidden_state_dim,
         dec_hidden_state_dim=hidden_state_dim
-    ).init_weights().to(get_device())
-
-    logging.info(f'Trainable params count: {trainable_params_count(model)}')
+    )
+    model.load_state_dict(torch.load(weights_path))
+    model.to(get_device())
 
     model_manager = ModelManager(
         model,
@@ -104,17 +108,7 @@ def main(
         )
     )
 
-    model_manager.fit(
-        train_iterator,
-        valid_iterator,
-        epochs=20,
-        callbacks=[
-            Logger(metrics=['time', 'epoch', 'train_loss', 'val_loss']),
-            SaveBestModel(metric='val_loss'),
-            EarlyStop(metric='val_loss', patience=3)
-        ]
-    )
-
+    logging.info(f'Validation loss: {model_manager.validation(test_iterator)}')
 
 if __name__ == '__main__':
     main()
