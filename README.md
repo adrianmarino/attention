@@ -22,7 +22,6 @@ $ cd attention
 **Step 2**: Create environment.
 
 ```bash
-$ cd attention
 $ conda env create -f environment.yml
 ```
 
