@@ -50,9 +50,9 @@ class AttentionSeqToSeqModel(nn.Module, CommonMixin):
         Args:
             - src_seq = [src phrase len, batch size]
             - trg_seq = [target phrase len, batch size]
-            - teacher_forcing_ratio(scalar) = Probabilidad de forzamiento del maestro.
-                                              e.g. si teacher_forcing_ratio es 0.75 usamos
-                                              las etiquetas el 75% del tiempo.
+            - teacher_forcing_ratio(scalar): Percentage of times the model use ground true token
+                                             instead of previous predicted token.
+
         Return: [target phrase len, batch size, dec vocab dim]
         """
         Assertions.is_tensor(404401, source_seq, 'Source sequence')
@@ -83,7 +83,6 @@ class AttentionSeqToSeqModel(nn.Module, CommonMixin):
                 target_token_batch = target_seq[token_index, :]
             else:
                 target_token_batch = torch.argmax(dec_prediction, dim=-1).squeeze(0)
-                # [1, batch size]
-                # squeeze -> [batch size]
+                # [1, batch size] -> squeeze -> [batch size]
 
         return predictions
