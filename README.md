@@ -47,7 +47,7 @@ $ python bin/train.py
 **Helper:**
 
 ```bash
-$ python bin/train.py --help                                                                                                                                                                         ✔  attention   23:21:19  
+$ python bin/train.py --help
 Usage: train.py [OPTIONS]
 
 Options:
@@ -72,7 +72,7 @@ $ python bin/eval.py \
 **Helper:**
 
 ```bash
-$ python bin/eval.py --help                                                                                                                                                                 1 ✘  3s   attention   23:18:13  
+$ python bin/eval.py --help
 Usage: eval.py [OPTIONS]
 
 Options:
