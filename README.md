@@ -44,7 +44,7 @@ $ python -m spacy download de_core_news_sm
 $ python bin/dataset_builder --help                                                                                                                                                                     ✔  attention   08:21:18  
 ```
 
-**Helper:**
+**Help:**
 
 ```bash
 $ python bin/dataset_builder --help                                                                                                                                                                     ✔  attention   08:21:18  
@@ -64,7 +64,7 @@ Options:
 $ python bin/train
 ```
 
-**Helper:**
+**Help:**
 
 ```bash
 $ python bin/train --help
@@ -89,7 +89,7 @@ $ python bin/eval \
     --weights=path ./weights/2022-02-16_23-13-14--model--epoch_2--val_loss_3.5578497585497404.pt
 ```
 
-**Helper:**
+**Help:**
 
 ```bash
 $ python bin/eval --help
