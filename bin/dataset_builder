@@ -5,6 +5,8 @@
 # -----------------------------------------------------------------------------
 import sys
 
+from pytorch_common.util import create_path
+
 sys.path.append('./src')
 
 import logging
@@ -26,17 +28,18 @@ from field_factory import FieldFactory
 # Functions
 # -----------------------------------------------------------------------------
 def save(data, destiny_path, filename):
+    create_path(destiny_path)
     path = f'{destiny_path}/{filename}.json'
     ExampleUtil.save(data, path)
     logging.info(f'{filename} set saved on {path}!')
 
 
-def download_dataset(origin_language, target_language):
-    source_field = FieldFactory.create_from_news_model(origin_language)
-    target_field = FieldFactory.create_from_web_model(target_language)
+def download_dataset(origin_language_model, target_language_model):
+    source_field = FieldFactory.create(origin_language_model)
+    target_field = FieldFactory.create(target_language_model)
 
     train_data, valid_data, test_data = Multi30k.splits(
-        exts=(f'.{origin_language}', f'.{target_language}'),
+        exts=(f'.{origin_language_model[:2]}', f'.{target_language_model[:2]}'),
         fields=(source_field, target_field)
     )
     logging.info("Dataset downloaded!")
@@ -54,12 +57,12 @@ def download_dataset(origin_language, target_language):
 # -----------------------------------------------------------------------------
 @click.command()
 @click.option('--destiny-path', default='./dataset', help='Dataset destiny path (Default: ./dataset)')
-@click.option('--origin-language', default='de', help='Origin language (Default: de)')
-@click.option('--target-language', default='en', help='Target language (Default: en)')
-def main(destiny_path, origin_language, target_language):
+@click.option('--origin-language-model', default='de_core_news_sm', help='Origin language (Default: de_core_news_sm')
+@click.option('--target-language-model', default='en_core_web_sm', help='Target language (Default: en_core_web_sm)')
+def main(destiny_path, origin_language_model, target_language_model):
     initialize_logger()
 
-    test_data, train_data, valid_data = download_dataset(origin_language, target_language)
+    test_data, train_data, valid_data = download_dataset(origin_language_model, target_language_model)
 
     save(train_data, destiny_path, 'train')
     save(valid_data, destiny_path, 'valid')

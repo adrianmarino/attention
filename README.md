@@ -51,10 +51,10 @@ $ python bin/dataset_builder --help                                             
 Usage: dataset_builder [OPTIONS]
 
 Options:
-  --destiny-path TEXT     Dataset destiny path (Default: ./dataset)
-  --origin-language TEXT  Origin language (Default: de)
-  --target-language TEXT  Target language (Default: en)
-  --help                  Show this message and exit.
+  --destiny-path TEXT           Dataset destiny path (Default: ./dataset)
+  --origin-language-model TEXT  Origin language (Default: de_core_news_sm
+  --target-language-model TEXT  Target language (Default: en_core_web_sm)
+  --help                        Show this message and exit.
 ```
 
 
@@ -71,22 +71,33 @@ $ python bin/train --help
 Usage: train [OPTIONS]
 
 Options:
-  --dataset-path TEXT        Dataset path (Default: ./dataset)
-  --batch-size INTEGER       Batch size (Default: 128)
-  --origin-language TEXT     Origin language (Default: de
-  --target-language TEXT     Target language (Default: en)
-  --origin-min-freq INTEGER  Origin language word min frequency (Default: 2)
-  --target-min-freq INTEGER  Target language word min frequency (Default: 2)
-  --device TEXT              Device used to train and optimize model. Values:
-                             gpu(Default) or cpu(Fallback).
-  --help                     Show this message and exit.
+  --dataset-path TEXT             Dataset path (Default: ./dataset)
+  --batch-size INTEGER            Batch size (Default: 128)
+  --origin-language-model TEXT    Origin language (Default: de_core_news_sm
+  --target-language-model TEXT    Target language (Default: en_core_web_sm)
+  --origin-min-freq INTEGER       Origin language word min frequency (Default:
+                                  2)
+  --target-min-freq INTEGER       Target language word min frequency (Default:
+                                  2)
+  --source-embedding-dim INTEGER  Source language embedding dimension
+                                  (Default: 256)
+  --target-embedding-dim INTEGER  Target language embedding dimension
+                                  (Default: 256)
+  --rnn-hidden-state-dim INTEGER  Rnn hidden state dimension (Default: 512)
+  --dropout INTEGER               Dropout (Default: 0.5)
+  --learning-rate FLOAT           Learning rate (Default: 0.001)
+  --epochs INTEGER                Epochs (Default: 20)
+  --early-stop-patience INTEGER   Early stop patience (Default: 3)
+  --device TEXT                   Device used to train and optimize model.
+                                  Values: gpu(Default) or cpu(Fallback).
+  --help                          Show this message and exit.
 ```
 
 ## Evaluation
 
 ```bash
 $ python bin/eval \
-    --weights=path ./weights/2022-02-16_23-13-14--model--epoch_2--val_loss_3.5578497585497404.pt
+    --weights-path ./weights/2022-02-16_23-13-14--model--epoch_2--val_loss_3.5578497585497404.pt
 ```
 
 **Help:**
@@ -96,14 +107,23 @@ $ python bin/eval --help
 Usage: eval [OPTIONS]
 
 Options:
-  --dataset-path TEXT        Dataset path (Default: ./dataset)
-  --batch-size INTEGER       Batch size (Default: 128)
-  --origin-language TEXT     Origin language (Default: de
-  --target-language TEXT     Target language (Default: en)
-  --origin-min-freq INTEGER  Origin language word min frequency (Default: 2)
-  --target-min-freq INTEGER  Target language word min frequency (Default: 2)
-  --weights-path TEXT        weights path
-  --device TEXT              Device used to train and optimize model. Values:
-                             gpu(Default) or cpu(Fallback).
-  --help                     Show this message and exit.
+  --dataset-path TEXT             Dataset path (Default: ./dataset)
+  --batch-size INTEGER            Batch size (Default: 128)
+  --origin-language-model TEXT    Origin language (Default: de_core_news_sm
+  --target-language-model TEXT    Target language (Default: en_core_web_sm)
+  --origin-min-freq INTEGER       Origin language word min frequency (Default:
+                                  2)
+  --target-min-freq INTEGER       Target language word min frequency (Default:
+                                  2)
+  --weights-path TEXT             Weights file path
+  --source-embedding-dim INTEGER  Source language embedding dimension
+                                  (Default: 256)
+  --target-embedding-dim INTEGER  Target language embedding dimension
+                                  (Default: 256)
+  --rnn-hidden-state-dim INTEGER  Rnn hidden state dimension (Default: 512)
+  --dropout INTEGER               Dropout (Default: 0.5)
+  --learning-rate FLOAT           Learning rate (Default: 0.001)
+  --device TEXT                   Device used to train and optimize model.
+                                  Values: gpu(Default) or cpu(Fallback).
+  --help                          Show this message and exit.
 ```
