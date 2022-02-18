@@ -45,11 +45,11 @@ from field_factory import FieldFactory
 @click.option('--target-min-freq', default=2, help='Target language word min frequency (Default: 2)')
 @click.option('--source-embedding-dim', default=256, help='Source language embedding dimension (Default: 256)')
 @click.option('--target-embedding-dim', default=256, help='Target language embedding dimension (Default: 256)')
-@click.option('--rnn-hidden-state-dim', default=256, help='Rnn hidden state dimension (Default: 512)')
+@click.option('--rnn-hidden-state-dim', default=256, help='Rnn hidden state dimension (Default: 256)')
 @click.option('--dropout', default=0.5, help='Dropout (Default: 0.5)')
 @click.option('--learning-rate', default=0.001, help='Learning rate (Default: 0.001)')
 @click.option('--epochs', default=20, help='Epochs (Default: 20)')
-@click.option('--early-stop-patience', default=3, help='Early stop patience (Default: 3)')
+@click.option('--early-stop-patience', default=2, help='Early stop patience (Default: 2)')
 @click.option(
     '--device',
     default='gpu',
@@ -113,17 +113,17 @@ def main(
             target_vocab_dim=len(target_field.vocab)
         )
     )
-
     model_manager.fit(
         train_iterator,
         valid_iterator,
         epochs=epochs,
         callbacks=[
-            Logger(metrics=['time', 'epoch', 'train_loss', 'val_loss']),
             SaveBestModel(metric='val_loss'),
-            EarlyStop(metric='val_loss', patience=early_stop_patience)
+            Logger(metrics=['time', 'epoch', 'train_loss', 'val_loss', 'patience']),
+            EarlyStop(metric='val_loss', patience=early_stop_patience, mode='min')
         ]
     )
+
 
 if __name__ == '__main__':
     main()

@@ -46,7 +46,7 @@ from field_factory import FieldFactory
 @click.option('--weights-path', help='Weights file path')
 @click.option('--source-embedding-dim', default=256, help='Source language embedding dimension (Default: 256)')
 @click.option('--target-embedding-dim', default=256, help='Target language embedding dimension (Default: 256)')
-@click.option('--rnn-hidden-state-dim', default=256, help='Rnn hidden state dimension (Default: 512)')
+@click.option('--rnn-hidden-state-dim', default=256, help='Rnn hidden state dimension (Default: 256)')
 @click.option('--dropout', default=0.5, help='Dropout (Default: 0.5)')
 @click.option('--learning-rate', default=0.001, help='Learning rate (Default: 0.001)')
 @click.option(
