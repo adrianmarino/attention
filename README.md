@@ -1,6 +1,6 @@
 # Attention
 
-Attention model implementation. [Paper](https://arxiv.org/abs/1409.0473).
+Attention based translation(de-to-en) model (seq to seq) implementation. [Paper](https://arxiv.org/abs/1409.0473).
 
 ## Requisites
 
