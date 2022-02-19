@@ -7,7 +7,7 @@ import sys
 
 sys.path.append('./src')
 
-from pytorch_common.callbacks import SaveBestModel, EarlyStop
+from pytorch_common.callbacks import SaveBestModel, EarlyStop, ReduceLROnPlateau
 from pytorch_common.callbacks.output import Logger
 from pytorch_common.util import get_device, set_device_name, trainable_params_count
 
@@ -34,6 +34,39 @@ from field_factory import FieldFactory
 #
 #
 # -----------------------------------------------------------------------------
+# Functions
+# -----------------------------------------------------------------------------
+def log_hyper_params(batch_size, dataset_path, device, dropout, early_stop_patience, epochs, learning_rate,
+                     origin_language_model, origin_min_freq, reduce_lr_factor, reduce_lr_min, reduce_lr_patience,
+                     rnn_hidden_state_dim, source_embedding_dim, target_embedding_dim, target_language_model,
+                     target_min_freq):
+    logging.info('Hyper parameters:')
+    logging.info(' - dataset_path: {}'.format(dataset_path))
+    logging.info(' - batch_size: {}'.format(batch_size))
+    logging.info(' - origin_language_model: {}'.format(origin_language_model))
+    logging.info(' - target_language_model: {}'.format(target_language_model))
+    logging.info(' - origin_min_freq: {}'.format(origin_min_freq))
+    logging.info(' - target_min_freq: {}'.format(target_min_freq))
+    logging.info(' - device: {}'.format(device))
+    logging.info(' - source_embedding_dim: {}'.format(source_embedding_dim))
+    logging.info(' - target_embedding_dim: {}'.format(target_embedding_dim))
+    logging.info(' - rnn_hidden_state_dim: {}'.format(rnn_hidden_state_dim))
+    logging.info(' - dropout: {}'.format(dropout))
+    logging.info(' - learning_rate: {}'.format(learning_rate))
+    logging.info(' - epochs: {}'.format(epochs))
+    logging.info(' - early_stop_patience: {}'.format(early_stop_patience))
+    logging.info(' - reduce_lr_patience: {}'.format(reduce_lr_patience))
+    logging.info(' - reduce_lr_factor: {}'.format(reduce_lr_factor))
+    logging.info(' - reduce_lr_min: {}'.format(reduce_lr_min))
+
+
+# -----------------------------------------------------------------------------
+#
+#
+#
+#
+#
+# -----------------------------------------------------------------------------
 # Main
 # -----------------------------------------------------------------------------
 @click.command()
@@ -49,7 +82,10 @@ from field_factory import FieldFactory
 @click.option('--dropout', default=0.5, help='Dropout (Default: 0.5)')
 @click.option('--learning-rate', default=0.001, help='Learning rate (Default: 0.001)')
 @click.option('--epochs', default=20, help='Epochs (Default: 20)')
-@click.option('--early-stop-patience', default=2, help='Early stop patience (Default: 2)')
+@click.option('--reduce-lr-patience', default=4, help='Reduce learning rate on plateau patience (Default: 4)')
+@click.option('--reduce-lr-factor', default=0.0015, help='Reduce learning rate on plateau factor (Default: 0.0015)')
+@click.option('--reduce-lr-min', default=0.0001, help='Reduce learning rate on plateau factor (Default: 0.0001)')
+@click.option('--early-stop-patience', default=5, help='Early stop patience (Default: 5)')
 @click.option(
     '--device',
     default='gpu',
@@ -69,9 +105,17 @@ def main(
         dropout,
         learning_rate,
         epochs,
-        early_stop_patience
+        early_stop_patience,
+        reduce_lr_patience,
+        reduce_lr_factor,
+        reduce_lr_min
 ):
-    initialize_logger()
+    initialize_logger('%(asctime)s %(levelname)-1s %(message)s')
+    log_hyper_params(batch_size, dataset_path, device, dropout, early_stop_patience, epochs, learning_rate,
+                     origin_language_model, origin_min_freq, reduce_lr_factor, reduce_lr_min, reduce_lr_patience,
+                     rnn_hidden_state_dim, source_embedding_dim, target_embedding_dim, target_language_model,
+                     target_min_freq)
+
     set_device_name(device)
 
     source_field = FieldFactory.create(origin_language_model)
@@ -103,7 +147,7 @@ def main(
         dec_hidden_state_dim=rnn_hidden_state_dim
     ).init_weights().to(get_device())
 
-    logging.info(f'Trainable params count: {trainable_params_count(model)}')
+    logging.info(f'Model:\n{model}\nTrainable params: {trainable_params_count(model)}')
 
     model_manager = ModelManager(
         model,
@@ -113,13 +157,21 @@ def main(
             target_vocab_dim=len(target_field.vocab)
         )
     )
+
+    logging.info(f'Begin model training...')
     model_manager.fit(
         train_iterator,
         valid_iterator,
         epochs=epochs,
         callbacks=[
             SaveBestModel(metric='val_loss'),
-            Logger(metrics=['time', 'epoch', 'train_loss', 'val_loss', 'patience']),
+            ReduceLROnPlateau(
+                patience=reduce_lr_patience,
+                metric='val_loss',
+                factor=reduce_lr_factor,
+                min_lr=reduce_lr_min
+            ),
+            Logger(metrics=['time', 'epoch', 'train_loss', 'val_loss', 'patience', 'lr']),
             EarlyStop(metric='val_loss', patience=early_stop_patience, mode='min')
         ]
     )

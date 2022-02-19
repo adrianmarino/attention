@@ -69,7 +69,7 @@ def main(
         dropout,
         learning_rate
 ):
-    initialize_logger()
+    initialize_logger('%(asctime)s %(levelname)-1s %(message)s')
     set_device_name(device)
 
     source_field = FieldFactory.create(origin_language_model)
@@ -80,8 +80,8 @@ def main(
     train_data = loader.load(f'{dataset_path}/train.json')
     test_data = loader.load(f'{dataset_path}/test.json')
 
-    test_iterator = BucketIterator.splits(
-        test_data,
+    _, test_iterator = BucketIterator.splits(
+        (train_data, test_data),
         batch_size=batch_size,
         sort=False,
         device=get_device()
@@ -112,7 +112,7 @@ def main(
         )
     )
 
-    logging.info(f'Validation loss: {model_manager.validation(test_iterator)}')
+    logging.info(f'Test set loss: {model_manager.validation(test_iterator)}')
 
 
 if __name__ == '__main__':

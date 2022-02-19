@@ -60,7 +60,7 @@ def download_dataset(origin_language_model, target_language_model):
 @click.option('--origin-language-model', default='de_core_news_sm', help='Origin language (Default: de_core_news_sm')
 @click.option('--target-language-model', default='en_core_web_sm', help='Target language (Default: en_core_web_sm)')
 def main(destiny_path, origin_language_model, target_language_model):
-    initialize_logger()
+    initialize_logger('%(asctime)s %(levelname)-1s %(message)s')
 
     test_data, train_data, valid_data = download_dataset(origin_language_model, target_language_model)
 
