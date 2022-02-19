@@ -4,7 +4,6 @@ Attention based translation(de-to-en) model (seq to seq) implementation. [Paper]
 
 ## Requisites
 
-* [git](https://git-scm.com/downloads)
 * [anaconda](https://www.anaconda.com/products/individual) / [miniconda](https://docs.conda.io/en/latest/miniconda.html)
 * pytorch-common
   * [Github repo](https://github.com/adrianmarino/pytorch-common/tree/master)
