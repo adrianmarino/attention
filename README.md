@@ -42,20 +42,21 @@ $ python -m spacy download de_core_news_sm
 ```bash
 $ python bin/dataset_builder
 
-2022-02-19 18:47:49,297 INFO train set saved on ./dataset/train.json!
-2022-02-19 18:47:49,300 INFO valid set saved on ./dataset/valid.json!
-2022-02-19 18:47:49,304 INFO test set saved on ./dataset/test.json!
+2022-02-19 18:47:49,297 INFO train set saved on ./dataset/train.json
+2022-02-19 18:47:49,300 INFO valid set saved on ./dataset/valid.json
+2022-02-19 18:47:49,304 INFO test set saved on ./dataset/test.json
 ```
 
-**Help:**
+**Help**
 
 ```bash
-$ python bin/dataset_builder --help                                                                                                                                                                     ✔  attention   08:21:18  
+$ python bin/dataset_builder --help
+
 Usage: dataset_builder [OPTIONS]
 
 Options:
   --destiny-path TEXT           Dataset destiny path (Default: ./dataset)
-  --origin-language-model TEXT  Origin language (Default: de_core_news_sm
+  --origin-language-model TEXT  Origin language (Default: de_core_news_sm)
   --target-language-model TEXT  Target language (Default: en_core_web_sm)
   --help                        Show this message and exit.
 ```
@@ -141,7 +142,7 @@ Trainable params: 11465221
 2022-02-19 18:58:27,308 INFO {'time': '0:00:17.49', 'epoch': 20, 'train_loss': 1.457812064544745, 'val_loss': 3.4632680416107178, 'patience': 2, 'lr': 0.0001}
 ```
 
-**Help:**
+**Help**
 
 ```bash
 $ python bin/train --help
@@ -180,12 +181,12 @@ Options:
 
 ```bash
 $ python bin/eval \
-  --weights-path ./weights/2022-02-19_18-56-27--experiment--epoch_13--val_loss_3.369119554758072.pt                                                                            1 ✘  3s   attention   19:03:54  
+  --weights-path ./weights/2022-02-19_18-56-27--experiment--epoch_13--val_loss_3.369119554758072.pt
 
 2022-02-19 19:05:41,228 INFO Test set loss: 3.4043412804603577
 ```
 
-**Help:**
+**Help**
 
 ```bash
 $ python bin/eval --help

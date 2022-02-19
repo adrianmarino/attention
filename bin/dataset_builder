@@ -31,7 +31,7 @@ def save(data, destiny_path, filename):
     create_path(destiny_path)
     path = f'{destiny_path}/{filename}.json'
     ExampleUtil.save(data, path)
-    logging.info(f'{filename} set saved on {path}!')
+    logging.info(f'{filename} set saved on {path}')
 
 
 def download_dataset(origin_language_model, target_language_model):
@@ -57,7 +57,7 @@ def download_dataset(origin_language_model, target_language_model):
 # -----------------------------------------------------------------------------
 @click.command()
 @click.option('--destiny-path', default='./dataset', help='Dataset destiny path (Default: ./dataset)')
-@click.option('--origin-language-model', default='de_core_news_sm', help='Origin language (Default: de_core_news_sm')
+@click.option('--origin-language-model', default='de_core_news_sm', help='Origin language (Default: de_core_news_sm)')
 @click.option('--target-language-model', default='en_core_web_sm', help='Target language (Default: en_core_web_sm)')
 def main(destiny_path, origin_language_model, target_language_model):
     initialize_logger('%(asctime)s %(levelname)-1s %(message)s')
