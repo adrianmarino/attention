@@ -9,7 +9,7 @@ Attention based translation(de-to-en) model (seq to seq) implementation. [Paper]
   * [Github repo](https://github.com/adrianmarino/pytorch-common/tree/master)
   * [Pypi repo](https://pypi.org/project/pytorch-common/)
 
-## Getting starter
+## Getting started
 
 **Step 1**: Clone repo.
 
